@@ -175,6 +175,7 @@ public class NeuralNetwork implements Serializable{
 		return outputs;
 	}
 	
+	
 	public static void main(String[] args) {
 		NeuralNetwork n = new NeuralNetwork(new int[] {2, 4, 3});
 		
