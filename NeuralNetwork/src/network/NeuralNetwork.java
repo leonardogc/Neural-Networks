@@ -93,6 +93,7 @@ public class NeuralNetwork implements Serializable{
 		System.out.println("Saved!");
 	}
 
+	
 	private void fromFile(String s) throws IOException {
 		String line="";
 		String[] sLine;
