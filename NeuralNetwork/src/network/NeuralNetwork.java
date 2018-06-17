@@ -9,6 +9,8 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import utils.NetworkUtils;
+
 public class NeuralNetwork implements Serializable{
 	private ArrayList<Layer> layers;
 	
@@ -132,5 +134,65 @@ public class NeuralNetwork implements Serializable{
 		}
 		
 		br.close();
+	}
+	
+	public ArrayList<Double> feedforward(ArrayList<Double> inputs){
+		ArrayList<Double> outputs = new ArrayList<>();
+		
+		Layer inputLayer = this.layers.get(0);
+		
+		if(inputLayer.neurons.size() != inputs.size()) {
+			return null;
+		}
+		
+		for(int n = 0; n < inputLayer.neurons.size(); n++) {
+			inputLayer.neurons.get(n).activation = inputs.get(n);
+		}
+		
+		for(int l = 1; l < this.layers.size(); l++) {
+			Layer layer = this.layers.get(l);
+			
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				double activation = 0;
+				Neuron neuron = layer.neurons.get(n);
+				
+				activation+=neuron.bias;
+				
+				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+					NeuronConnection conn = neuron.inputs.get(pn);
+					
+					activation+=conn.weight*conn.from.activation;
+				}
+				
+				activation = NetworkUtils.sigmoid(activation);
+				
+				neuron.activation = activation;
+				
+				if(l == this.layers.size()-1) {
+					outputs.add(neuron.activation);
+				}
+			}
+		}
+		
+		return outputs;
+	}
+	
+	public static void main(String[] args) {
+		NeuralNetwork n = new NeuralNetwork(new int[] {2, 4, 3});
+		
+		ArrayList<Double> in = new ArrayList<>();
+		in.add(1.0);
+		in.add(2.0);
+		
+		ArrayList<Double> out = n.feedforward(in);
+		
+		if(out == null) {
+			System.out.println("Oh no!");
+		}
+		else {
+			for(int i = 0; i < out.size(); i++) {
+				System.out.println(out.get(i));
+			}
+		}
 	}
 }
