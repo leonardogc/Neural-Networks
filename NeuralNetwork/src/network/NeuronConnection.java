@@ -13,4 +13,10 @@ public class NeuronConnection implements Serializable{
 		this.to = to;
 		this.weight = weight;
 	}
+	
+	public NeuronConnection(Neuron from, Neuron to) {
+		this.from = from;
+		this.to = to;
+		this.weight = 0;
+	}
 }

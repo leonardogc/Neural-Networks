@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Neuron implements Serializable{
-	public double activation;
+	public double activation; //always between 0 and 1, inclusive
+	public double bias;
 	
 	//connections from other neurons to this neuron
 	public ArrayList<NeuronConnection> inputs;
@@ -12,14 +13,16 @@ public class Neuron implements Serializable{
 	//connections from this neuron to other neurons
 	public ArrayList<NeuronConnection> outputs;
 	
-	public Neuron(double activation, ArrayList<NeuronConnection> inputs, ArrayList<NeuronConnection> outputs) {
+	public Neuron(double activation, double bias, ArrayList<NeuronConnection> inputs, ArrayList<NeuronConnection> outputs) {
 		this.activation = activation;
+		this.bias = bias;
 		this.inputs = inputs;
 		this.outputs = outputs;
 	}	
 	
 	public Neuron() {
 		this.activation = 0;
+		this.bias = 0;
 		this.inputs = new ArrayList<>();
 		this.outputs = new ArrayList<>();
 	}
