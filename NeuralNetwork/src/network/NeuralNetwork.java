@@ -136,7 +136,7 @@ public class NeuralNetwork implements Serializable{
 		br.close();
 	}
 	
-	public ArrayList<Double> feedforward(ArrayList<Double> inputs){
+	public ArrayList<Double> feedForward(ArrayList<Double> inputs){
 		ArrayList<Double> outputs = new ArrayList<>();
 		
 		Layer inputLayer = this.layers.get(0);
@@ -184,7 +184,7 @@ public class NeuralNetwork implements Serializable{
 		in.add(1.0);
 		in.add(2.0);
 		
-		ArrayList<Double> out = n.feedforward(in);
+		ArrayList<Double> out = n.feedForward(in);
 		
 		if(out == null) {
 			System.out.println("Oh no!");
