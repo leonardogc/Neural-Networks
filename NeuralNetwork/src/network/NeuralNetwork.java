@@ -27,6 +27,25 @@ public class NeuralNetwork implements Serializable{
 			this.layers.add(layer);
 		}
 		
-		
+		for(int layer = 1; layer < this.layers.size(); layer++) {
+			Layer prevLayer = this.layers.get(layer-1);
+			Layer currLayer = this.layers.get(layer);
+			
+			for(int cn = 0; cn < currLayer.neurons.size(); cn++) {
+				Neuron to = currLayer.neurons.get(cn);
+				
+				for(int pn = 0; pn < prevLayer.neurons.size(); pn++) {
+					Neuron from = prevLayer.neurons.get(pn);
+					//need to change weight
+					NeuronConnection conn = new NeuronConnection(from, to, 1); 
+					
+					from.outputs.add(conn);
+					to.inputs.add(conn);
+				}
+				
+				//bias
+				to.inputs.add(new NeuronConnection(null, to, 1));
+			}
+		}
 	}
 }
