@@ -95,7 +95,6 @@ public class NeuralNetwork implements Serializable{
 		System.out.println("Saved!");
 	}
 
-	
 	private void fromFile(String s) throws IOException {
 		String line="";
 		String[] sLine;
@@ -160,7 +159,6 @@ public class NeuralNetwork implements Serializable{
 				
 				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
 					NeuronConnection conn = neuron.inputs.get(pn);
-					
 					activation+=conn.weight*conn.from.activation;
 				}
 				
