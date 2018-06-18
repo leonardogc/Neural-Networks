@@ -162,7 +162,7 @@ public class NeuralNetwork implements Serializable{
 					activation+=conn.weight*conn.from.activation;
 				}
 				
-				activation = NetworkUtils.sigmoid(activation);
+				activation = NetworkUtils.s(activation);
 				
 				neuron.activation = activation;
 				
@@ -173,6 +173,42 @@ public class NeuralNetwork implements Serializable{
 		}
 		
 		return outputs;
+	}
+	
+	public void resetGradients() {
+		for(int l = 1; l < this.layers.size(); l++) {
+			Layer layer = this.layers.get(l);
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				Neuron neuron = layer.neurons.get(n);
+				
+				neuron.dC_dB = 0;
+				
+				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+					neuron.inputs.get(pn).dC_dW = 0;
+				}
+			}
+		}
+	}
+	
+	
+	public void updateGradients(ArrayList<Double> trainingInputs, ArrayList<Double> expectedOutputs, double nTrEx) {
+		
+	}
+	
+	public void updateWeightsAndBias(double learningRate) {
+		for(int l = 1; l < this.layers.size(); l++) {
+			Layer layer = this.layers.get(l);
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				Neuron neuron = layer.neurons.get(n);
+				
+				neuron.bias -= learningRate*neuron.dC_dB;
+				
+				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+					NeuronConnection conn = neuron.inputs.get(pn);
+					conn.weight -= learningRate*conn.dC_dW;
+				}
+			}
+		}
 	}
 	
 	

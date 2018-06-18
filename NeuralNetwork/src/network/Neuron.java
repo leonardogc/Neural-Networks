@@ -7,6 +7,10 @@ public class Neuron implements Serializable{
 	public double activation; //always between 0 and 1, inclusive
 	public double bias;
 	
+	public double dC_dB;
+	public double temp_dC_dA;
+	public double temp_var;
+	
 	//connections from other neurons to this neuron
 	public ArrayList<NeuronConnection> inputs;
 	
@@ -18,6 +22,9 @@ public class Neuron implements Serializable{
 		this.bias = bias;
 		this.inputs = inputs;
 		this.outputs = outputs;
+		this.dC_dB = 0;
+		this.temp_dC_dA = 0;
+		this.temp_var = 0;
 	}	
 	
 	public Neuron() {
@@ -25,5 +32,8 @@ public class Neuron implements Serializable{
 		this.bias = 0;
 		this.inputs = new ArrayList<>();
 		this.outputs = new ArrayList<>();
+		this.dC_dB = 0;
+		this.temp_dC_dA = 0;
+		this.temp_var = 0;
 	}
 }
