@@ -92,7 +92,7 @@ public class ImageRecognition {
 
 			net.updateWeightsAndBias(4.0, nTrEx);
 			
-			if(index >= images.size() - 1) {
+			if(index >= images.size()) {
 				index = 0;
 				Collections.shuffle(images);
 			}
