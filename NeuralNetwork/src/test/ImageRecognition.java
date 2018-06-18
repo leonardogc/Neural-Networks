@@ -94,6 +94,7 @@ public class ImageRecognition {
 			
 			if(index >= images.size() - 1) {
 				index = 0;
+				Collections.shuffle(images);
 			}
 		}
 		
