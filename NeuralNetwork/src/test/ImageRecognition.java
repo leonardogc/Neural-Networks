@@ -55,6 +55,10 @@ public class ImageRecognition {
 
 			images.add(new ImageRecognition(image, value));
 			counter++;
+			
+			if(counter % 1000 == 0) {
+				System.out.println(counter);
+			}
 		}
 
 		Collections.shuffle(images);
