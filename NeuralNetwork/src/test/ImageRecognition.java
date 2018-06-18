@@ -146,18 +146,23 @@ public class ImageRecognition {
 
 
 			ArrayList<Double> out = net.feedForward(images.get(n).image);
-
+			
+			
+			double max=-1;
+			int max_i=-1;
+			
 			for(int i = 0; i < out.size(); i++) {
-				if(out.get(i) >= 0.5) {
-					System.out.println("Net: " + i);
-
-					for(int i2 = 0; i2 < images.get(n).value.size(); i2++) {
-						if(images.get(n).value.get(i2)>=0.5) {
-							System.out.println("Real: " + i2);
-							break;
-						}
-					}
-
+				if(out.get(i) > max) {
+					max = out.get(i);
+					max_i = i;
+				}
+			}
+			
+			System.out.println("Net: " + max_i);
+			
+			for(int i2 = 0; i2 < images.get(n).value.size(); i2++) {
+				if(images.get(n).value.get(i2) == 1.0) {
+					System.out.println("Real: " + i2);
 					break;
 				}
 			}
