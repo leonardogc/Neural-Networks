@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import network.NeuralNetwork;
+import utils.NetworkUtils;
 
 public class NXOR {
 	public static void main(String[] args) {
 		/*NeuralNetwork net = new NeuralNetwork("nxor.txt");
 		
 		ArrayList<Double> in = new ArrayList<>();
-		in.add(1.0);
+		in.add(0.0);
 		in.add(1.0);
 		
 		ArrayList<Double> out = net.feedForward(in);
@@ -68,7 +69,26 @@ public class NXOR {
 
 		int nTrEx = 16;
 
-		for(int it = 0; it < 1000000; it++) {
+		for(int it = 0; it < 10000; it++) {
+			//calculate cost
+			
+			double averageCost = 0;
+			
+			for(int i = 0; i < nTrEx; i++) {
+				int n = 2*r.nextInt(4);
+
+				ArrayList<Double> out = net.feedForward(list.get(n));
+				
+				for(int s = 0; s < out.size(); s++) {
+					averageCost+=NetworkUtils.cost(out.get(s), list.get(n+1).get(s));
+				}
+			}
+			
+			averageCost/=nTrEx;
+			
+			System.out.println("Cost: " + averageCost);
+			//
+			
 			net.resetGradients();
 
 			for(int i = 0; i < nTrEx; i++) {
@@ -77,7 +97,7 @@ public class NXOR {
 				net.updateGradients(list.get(n), list.get(n+1));
 			}
 
-			net.updateWeightsAndBias(0.5, nTrEx);
+			net.updateWeightsAndBias(1.0, nTrEx);
 		}
 
 		try {
