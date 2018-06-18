@@ -67,7 +67,7 @@ public class NXOR {
 		
 		Random r = new Random();
 
-		int nTrEx = 16;
+		int nTrEx = 8;
 
 		for(int it = 0; it < 10000; it++) {
 			//calculate cost
