@@ -48,12 +48,14 @@ public class NeuralNetwork implements Serializable{
 			Layer prevLayer = this.layers.get(layer-1);
 			Layer currLayer = this.layers.get(layer);
 			
+			double variance = 2.0/(prevLayer.neurons.size()+currLayer.neurons.size());
+			
 			for(int cn = 0; cn < currLayer.neurons.size(); cn++) {
 				Neuron to = currLayer.neurons.get(cn);
 				
 				for(int pn = 0; pn < prevLayer.neurons.size(); pn++) {
 					Neuron from = prevLayer.neurons.get(pn);
-					NeuronConnection conn = new NeuronConnection(from, to, r.nextDouble()*4.0-2.0); 
+					NeuronConnection conn = new NeuronConnection(from, to, r.nextGaussian()*variance); 
 					
 					to.inputs.add(conn);
 				}
