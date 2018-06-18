@@ -8,15 +8,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import utils.NetworkUtils;
 
 public class NeuralNetwork implements Serializable{
 	private ArrayList<Layer> layers;
-	
-	public NeuralNetwork(ArrayList<Layer> layers) {
-		this.layers = layers;
-	}
 	
 	public NeuralNetwork(int[] neuronsPerLayer) {
 		this.layers = new ArrayList<>();
@@ -45,6 +42,8 @@ public class NeuralNetwork implements Serializable{
 			this.layers.add(layer);
 		}
 		
+		Random r = new Random();
+		
 		for(int layer = 1; layer < this.layers.size(); layer++) {
 			Layer prevLayer = this.layers.get(layer-1);
 			Layer currLayer = this.layers.get(layer);
@@ -54,7 +53,7 @@ public class NeuralNetwork implements Serializable{
 				
 				for(int pn = 0; pn < prevLayer.neurons.size(); pn++) {
 					Neuron from = prevLayer.neurons.get(pn);
-					NeuronConnection conn = new NeuronConnection(from, to); 
+					NeuronConnection conn = new NeuronConnection(from, to, r.nextDouble()*20.0-10.0); 
 					
 					to.inputs.add(conn);
 				}
@@ -190,6 +189,17 @@ public class NeuralNetwork implements Serializable{
 	
 	
 	public void updateGradients(ArrayList<Double> trainingInputs, ArrayList<Double> expectedOutputs) {
+		if(trainingInputs.size() != this.layers.get(0).neurons.size()) {
+			System.out.println("Wrong input size");
+			return;
+		}
+		
+		if(expectedOutputs.size() != this.layers.get(this.layers.size()-1).neurons.size()) {
+			System.out.println("Wrong output size");
+			return;
+		}
+		
+		
 		for(int l = 0; l < this.layers.size(); l++) {
 			Layer layer = this.layers.get(l);
 			for(int n = 0; n < layer.neurons.size(); n++) {
