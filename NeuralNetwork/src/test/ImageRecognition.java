@@ -138,7 +138,7 @@ public class ImageRecognition {
 						System.out.print("  ");
 					}
 					else {
-						System.out.print(". ");
+						System.out.print("o ");
 					}
 				}
 				System.out.println();
