@@ -173,7 +173,7 @@ public class NeuralNetwork implements Serializable{
 	}
 	
 	public void resetGradients() {
-		for(int l = 0; l < this.layers.size(); l++) {
+		for(int l = 1; l < this.layers.size(); l++) {
 			Layer layer = this.layers.get(l);
 			for(int n = 0; n < layer.neurons.size(); n++) {
 				Neuron neuron = layer.neurons.get(n);
