@@ -56,7 +56,6 @@ public class NeuralNetwork implements Serializable{
 					Neuron from = prevLayer.neurons.get(pn);
 					NeuronConnection conn = new NeuronConnection(from, to); 
 					
-					from.outputs.add(conn);
 					to.inputs.add(conn);
 				}
 			}
@@ -162,9 +161,8 @@ public class NeuralNetwork implements Serializable{
 					activation+=conn.weight*conn.from.activation;
 				}
 				
-				activation = NetworkUtils.s(activation);
-				
-				neuron.activation = activation;
+				neuron.z = activation;
+				neuron.activation = NetworkUtils.s(activation);
 				
 				if(l == this.layers.size()-1) {
 					outputs.add(neuron.activation);
@@ -176,7 +174,7 @@ public class NeuralNetwork implements Serializable{
 	}
 	
 	public void resetGradients() {
-		for(int l = 1; l < this.layers.size(); l++) {
+		for(int l = 0; l < this.layers.size(); l++) {
 			Layer layer = this.layers.get(l);
 			for(int n = 0; n < layer.neurons.size(); n++) {
 				Neuron neuron = layer.neurons.get(n);
@@ -191,21 +189,65 @@ public class NeuralNetwork implements Serializable{
 	}
 	
 	
-	public void updateGradients(ArrayList<Double> trainingInputs, ArrayList<Double> expectedOutputs, double nTrEx) {
+	public void updateGradients(ArrayList<Double> trainingInputs, ArrayList<Double> expectedOutputs) {
+		for(int l = 0; l < this.layers.size(); l++) {
+			Layer layer = this.layers.get(l);
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				layer.neurons.get(n).temp_dC_dA = 0;
+			}
+		}
 		
+		feedForward(trainingInputs);
+		
+		Layer lastLayer = this.layers.get(this.layers.size() - 1);
+		
+		for(int n = 0; n < lastLayer.neurons.size(); n++) {
+			Neuron neuron = lastLayer.neurons.get(n);
+			neuron.temp_dC_dA = NetworkUtils.dCost(neuron.activation, expectedOutputs.get(n));
+			
+			neuron.temp_var = NetworkUtils.ds(neuron.z)*neuron.temp_dC_dA;
+			neuron.dC_dB += neuron.temp_var;
+			
+			for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+				NeuronConnection conn = neuron.inputs.get(pn);
+				
+				conn.dC_dW += conn.from.activation*conn.to.temp_var;
+				conn.from.temp_dC_dA += conn.weight*conn.to.temp_var;
+			}
+		}
+		
+
+		for(int l = this.layers.size() - 2; l > 0; l--) {
+			Layer layer = this.layers.get(l);
+			
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				Neuron neuron = layer.neurons.get(n);
+				
+				neuron.temp_var = NetworkUtils.ds(neuron.z)*neuron.temp_dC_dA;
+				neuron.dC_dB += neuron.temp_var;
+
+				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+					NeuronConnection conn = neuron.inputs.get(pn);
+
+					conn.dC_dW += conn.from.activation*conn.to.temp_var;
+					conn.from.temp_dC_dA += conn.weight*conn.to.temp_var;
+				}
+			}
+		}
+
 	}
 	
-	public void updateWeightsAndBias(double learningRate) {
+	public void updateWeightsAndBias(double learningRate, double nTrEx) {
 		for(int l = 1; l < this.layers.size(); l++) {
 			Layer layer = this.layers.get(l);
 			for(int n = 0; n < layer.neurons.size(); n++) {
 				Neuron neuron = layer.neurons.get(n);
 				
-				neuron.bias -= learningRate*neuron.dC_dB;
+				neuron.bias -= learningRate*neuron.dC_dB/nTrEx;
 				
 				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
 					NeuronConnection conn = neuron.inputs.get(pn);
-					conn.weight -= learningRate*conn.dC_dW;
+					conn.weight -= learningRate*conn.dC_dW/nTrEx;
 				}
 			}
 		}
@@ -213,7 +255,7 @@ public class NeuralNetwork implements Serializable{
 	
 	
 	public static void main(String[] args) {
-		NeuralNetwork n = new NeuralNetwork(new int[] {2, 4, 3});
+		NeuralNetwork n = new NeuralNetwork(new int[] {2, 3, 2});
 		
 		ArrayList<Double> in = new ArrayList<>();
 		in.add(1.0);
