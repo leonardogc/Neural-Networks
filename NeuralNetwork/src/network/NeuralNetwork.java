@@ -201,14 +201,6 @@ public class NeuralNetwork implements Serializable{
 			return;
 		}
 		
-		
-		for(int l = 0; l < this.layers.size(); l++) {
-			Layer layer = this.layers.get(l);
-			for(int n = 0; n < layer.neurons.size(); n++) {
-				layer.neurons.get(n).temp_dC_dA = 0;
-			}
-		}
-		
 		feedForward(trainingInputs);
 
 		for(int l = this.layers.size() - 1; l > 0; l--) {
@@ -228,6 +220,11 @@ public class NeuralNetwork implements Serializable{
 					NeuronConnection conn = neuron.inputs.get(pn);
 
 					conn.dC_dW += conn.from.activation*conn.to.temp_var;
+					
+					if(n == 0) {
+						conn.from.temp_dC_dA = 0;
+					}
+					
 					conn.from.temp_dC_dA += conn.weight*conn.to.temp_var;
 				}
 			}
