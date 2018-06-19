@@ -13,36 +13,23 @@ import network.NeuralNetwork;
 import utils.NetworkUtils;
 
 public class ImageRecognition {
-	public ArrayList<Double> image;
-	public ArrayList<Double> value;
 	
-	public ImageRecognition(ArrayList<Double> image, int value) {
-		this.image = image;
-		this.value = new ArrayList<>();
-		
-		for(int i = 0; i < 10; i++) {
-			if(i == value) {
-				this.value.add(1.0);
-			}
-			else {
-				this.value.add(0.0);
-			}
-		}
-	}
-	
-	public static void main(String[] args) throws IOException {
-		//TRAIN
+	public static ArrayList<Image> loadImages(int from, int to, String path) throws IOException{
 		String line="";
 		String[] sLine;
 
-		File file = new File("C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_train.csv");
+		File file = new File(path);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		
-		ArrayList<ImageRecognition> images = new ArrayList<>();
+		for(int i = 0; i < from; i++) {
+			br.readLine();
+		}
+		
+		ArrayList<Image> images = new ArrayList<>();
 		
 		int counter=0;
 		
-		while((line = br.readLine()) != null && counter < 30000) {
+		while((line = br.readLine()) != null && counter < (to-from)) {
 			sLine = line.split(",");
 			
 			int value = Integer.parseInt(sLine[0]);
@@ -53,13 +40,22 @@ public class ImageRecognition {
 				image.add(Double.parseDouble(sLine[i])/255.0);
 			}
 
-			images.add(new ImageRecognition(image, value));
+			images.add(new Image(image, value));
 			counter++;
 			
 			if(counter % 1000 == 0) {
 				System.out.println(counter);
 			}
 		}
+		
+		br.close();
+		
+		return images;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		//TRAIN
+		ArrayList<Image> images = loadImages(0, 30000, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_train.csv");
 
 		Collections.shuffle(images);
 
@@ -68,25 +64,26 @@ public class ImageRecognition {
 		
 		int nTrEx = 100;
 		int index = 0;
+		
+		int costN = 200;
 
 		for(int it = 0; it < 2000; it++) {
 			//calculate cost
 			
 			double averageCost = 0;
-			int index2 = index;
 			
-			for(int i = 0; i < nTrEx && index2 < images.size(); i++, index2++) {
-				ArrayList<Double> out = net.getOutput(images.get(index2).image);
+			for(int i = 0; i < costN && i < images.size(); i++) {
+				ArrayList<Double> out = net.getOutput(images.get(i).image);
 				
 				for(int s = 0; s < out.size(); s++) {
-					averageCost+=NetworkUtils.cost(out.get(s), images.get(index2).value.get(s));
+					averageCost+=NetworkUtils.cost(out.get(s), images.get(i).value.get(s));
 				}
 			}
 			
-			averageCost/=nTrEx;
+			averageCost/=costN;
 			
 			System.out.println("Cost: " + averageCost + " It: " + it);
-			//
+			////
 			
 			net.resetGradients();
 
@@ -102,37 +99,12 @@ public class ImageRecognition {
 			}
 		}
 		
-		br.close();
-		
 		net.toFile("imageRecog.txt");
 		
 		
 		//TEST
-		
-		/*String line="";
-		String[] sLine;
 
-		File file = new File("C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_test.csv");
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		
-		ArrayList<ImageRecognition> images = new ArrayList<>();
-		
-		int counter=0;
-		
-		while((line = br.readLine()) != null && counter < 200) {
-			sLine = line.split(",");
-			
-			int value = Integer.parseInt(sLine[0]);
-			
-			ArrayList<Double> image = new ArrayList<>();
-			
-			for(int i = 1; i < sLine.length; i++) {
-				image.add(Double.parseDouble(sLine[i])/255.0);
-			}
-
-			images.add(new ImageRecognition(image, value));
-			counter++;
-		}
+		/*ArrayList<Image> images = loadImages(0, 200, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_test.csv");
 
 		NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
 
@@ -172,9 +144,7 @@ public class ImageRecognition {
 					break;
 				}
 			}
-		}
-		
-		br.close();*/
+		}*/
 
 
 	}
