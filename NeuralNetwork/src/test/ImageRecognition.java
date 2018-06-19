@@ -102,6 +102,8 @@ public class ImageRecognition {
 			}
 		}
 		
+		br.close();
+		
 		net.toFile("imageRecog.txt");
 		
 		
@@ -170,7 +172,9 @@ public class ImageRecognition {
 					break;
 				}
 			}
-		}*/
+		}
+		
+		br.close();*/
 
 
 	}
