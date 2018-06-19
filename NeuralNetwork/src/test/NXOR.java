@@ -12,10 +12,10 @@ public class NXOR {
 		/*NeuralNetwork net = new NeuralNetwork("nxor.txt");
 		
 		ArrayList<Double> in = new ArrayList<>();
-		in.add(0.0);
+		in.add(1.0);
 		in.add(1.0);
 		
-		ArrayList<Double> out = net.feedForward(in);
+		ArrayList<Double> out = net.getOutput(in);
 		
 		for(int i = 0; i < out.size(); i++) {
 			System.out.println(out.get(i));
@@ -77,7 +77,7 @@ public class NXOR {
 			for(int i = 0; i < nTrEx; i++) {
 				int n = 2*r.nextInt(4);
 
-				ArrayList<Double> out = net.feedForward(list.get(n));
+				ArrayList<Double> out = net.getOutput(list.get(n));
 				
 				for(int s = 0; s < out.size(); s++) {
 					averageCost+=NetworkUtils.cost(out.get(s), list.get(n+1).get(s));

@@ -135,14 +135,27 @@ public class NeuralNetwork implements Serializable{
 		br.close();
 	}
 	
-	public ArrayList<Double> feedForward(ArrayList<Double> inputs){
-		ArrayList<Double> outputs = new ArrayList<>();
-		
-		Layer inputLayer = this.layers.get(0);
-		
-		if(inputLayer.neurons.size() != inputs.size()) {
+	public ArrayList<Double> getOutput(ArrayList<Double> inputs) {
+		if(inputs.size() != this.layers.get(0).neurons.size()) {
+			System.out.println("Wrong input size");
 			return null;
 		}
+		
+		feedForward(inputs);
+		
+		ArrayList<Double> outputs = new ArrayList<>();
+		
+		Layer lastLayer = this.layers.get(this.layers.size() - 1);
+		
+		for(int i = 0; i < lastLayer.neurons.size(); i++) {
+			outputs.add(lastLayer.neurons.get(i).activation);
+		}
+		
+		return outputs;
+	}
+	
+	private void feedForward(ArrayList<Double> inputs){
+		Layer inputLayer = this.layers.get(0);
 		
 		for(int n = 0; n < inputLayer.neurons.size(); n++) {
 			inputLayer.neurons.get(n).activation = inputs.get(n);
@@ -164,14 +177,8 @@ public class NeuralNetwork implements Serializable{
 				
 				neuron.z = activation;
 				neuron.activation = NetworkUtils.s(activation);
-				
-				if(l == this.layers.size()-1) {
-					outputs.add(neuron.activation);
-				}
 			}
 		}
-		
-		return outputs;
 	}
 	
 	public void resetGradients() {
@@ -256,7 +263,7 @@ public class NeuralNetwork implements Serializable{
 		in.add(1.0);
 		in.add(2.0);
 		
-		ArrayList<Double> out = n.feedForward(in);
+		ArrayList<Double> out = n.getOutput(in);
 		
 		if(out == null) {
 			System.out.println("Oh no!");

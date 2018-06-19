@@ -76,7 +76,7 @@ public class ImageRecognition {
 			int index2 = index;
 			
 			for(int i = 0; i < nTrEx && index2 < images.size(); i++, index2++) {
-				ArrayList<Double> out = net.feedForward(images.get(index2).image);
+				ArrayList<Double> out = net.getOutput(images.get(index2).image);
 				
 				for(int s = 0; s < out.size(); s++) {
 					averageCost+=NetworkUtils.cost(out.get(s), images.get(index2).value.get(s));
@@ -149,7 +149,7 @@ public class ImageRecognition {
 			}
 
 
-			ArrayList<Double> out = net.feedForward(images.get(n).image);
+			ArrayList<Double> out = net.getOutput(images.get(n).image);
 			
 			
 			double max=-1;
