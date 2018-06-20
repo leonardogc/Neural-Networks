@@ -1,4 +1,4 @@
-package test;
+package test.gates;
 
 import java.io.IOException;
 import java.util.ArrayList;

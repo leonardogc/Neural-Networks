@@ -1,4 +1,4 @@
-package test;
+package test.images;
 
 import java.io.BufferedReader;
 import java.io.File;
