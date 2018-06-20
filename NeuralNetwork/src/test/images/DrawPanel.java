@@ -7,6 +7,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -78,16 +80,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 			this.image[row-1][col] = 1;
 		}
 		
-		if(row != this.image.length-1) {
-			this.image[row+1][col] = 1;
-		}
-		
 		if(col != 0) {
 			this.image[row][col-1] = 1;
-		}
-		
-		if(col != this.image[row].length-1) {
-			this.image[row][col+1] = 1;
 		}
 		
 		repaint();
@@ -139,6 +133,28 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 			
 			repaint();
 		}
+		
+		/*if(e.getKeyCode() == KeyEvent.VK_F) {
+		    FileWriter fw;
+			try {
+				fw = new FileWriter("2.txt", true);
+			    fw.write("2");
+			    
+			    for(int r = 0; r < this.image.length; r++) {
+					for(int c = 0; c < this.image[r].length; c++) {
+						fw.write("," + (this.image[r][c] > 0 ? 255.0 : 0.0));
+					}
+				}
+			    
+			    fw.write("\n");
+			    
+			    fw.close();
+			    System.out.println("Saved!");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+		}*/
 	}
 
 	@Override
