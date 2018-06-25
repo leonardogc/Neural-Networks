@@ -91,7 +91,7 @@ public class ImageRecognition {
 				net.updateGradients(images.get(index).image, images.get(index).value);
 			}
 
-			net.updateWeightsAndBias(4.0, nTrEx);
+			net.updateWeightsAndBias(4.0);
 			
 			if(index >= images.size()) {
 				index = 0;

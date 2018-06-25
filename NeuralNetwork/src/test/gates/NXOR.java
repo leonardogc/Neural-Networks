@@ -97,7 +97,7 @@ public class NXOR {
 				net.updateGradients(list.get(n), list.get(n+1));
 			}
 
-			net.updateWeightsAndBias(4.0, nTrEx);
+			net.updateWeightsAndBias(4.0);
 		}
 
 		try {

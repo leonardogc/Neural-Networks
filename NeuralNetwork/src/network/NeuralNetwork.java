@@ -14,15 +14,18 @@ import utils.NetworkUtils;
 
 public class NeuralNetwork implements Serializable{
 	private ArrayList<Layer> layers;
+	private double trainingEx;
 	
 	public NeuralNetwork(int[] neuronsPerLayer) {
 		this.layers = new ArrayList<>();
+		this.trainingEx = 0;
 		
 		createNetwork(neuronsPerLayer);
 	}
 	
 	public NeuralNetwork(String file) {
 		this.layers = new ArrayList<>();
+		this.trainingEx = 0;
 		
 		try {
 			fromFile(file);
@@ -194,6 +197,8 @@ public class NeuralNetwork implements Serializable{
 				}
 			}
 		}
+		
+		this.trainingEx = 0;
 	}
 	
 	
@@ -236,20 +241,25 @@ public class NeuralNetwork implements Serializable{
 				}
 			}
 		}
-
+		
+		this.trainingEx++;
 	}
 	
-	public void updateWeightsAndBias(double learningRate, double nTrEx) {
+	public void updateWeightsAndBias(double learningRate) {
+		if(this.trainingEx == 0) {
+			return;
+		}
+		
 		for(int l = 1; l < this.layers.size(); l++) {
 			Layer layer = this.layers.get(l);
 			for(int n = 0; n < layer.neurons.size(); n++) {
 				Neuron neuron = layer.neurons.get(n);
 				
-				neuron.bias -= learningRate*neuron.dC_dB/nTrEx;
+				neuron.bias -= learningRate*neuron.dC_dB/this.trainingEx;
 				
 				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
 					NeuronConnection conn = neuron.inputs.get(pn);
-					conn.weight -= learningRate*conn.dC_dW/nTrEx;
+					conn.weight -= learningRate*conn.dC_dW/this.trainingEx;
 				}
 			}
 		}

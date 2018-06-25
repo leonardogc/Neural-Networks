@@ -152,7 +152,7 @@ public class PulsarRecognition {
 				net.updateGradients(pulsars.get(index).in, pulsars.get(index).out);
 			}
 
-			net.updateWeightsAndBias(2.0, nTrEx);
+			net.updateWeightsAndBias(2.0);
 			
 			if(index >= pulsars.size()) {
 				index = 0;
