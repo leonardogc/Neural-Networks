@@ -13,7 +13,7 @@ import java.util.Random;
 import utils.NetworkUtils;
 
 public class NeuralNetwork implements Serializable{
-	private ArrayList<Layer> layers;
+	public ArrayList<Layer> layers;
 	private double trainingEx;
 	
 	public NeuralNetwork(int[] neuronsPerLayer) {
