@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import network.NetworkUtils;
 import network.NeuralNetwork;
-import utils.NetworkUtils;
 
 public class PulsarRecognition {
 	public static int inputVarsN = 8;

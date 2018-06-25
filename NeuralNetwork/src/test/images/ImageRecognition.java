@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import network.NetworkUtils;
 import network.NeuralNetwork;
-import utils.NetworkUtils;
 
 public class ImageRecognition {
 	

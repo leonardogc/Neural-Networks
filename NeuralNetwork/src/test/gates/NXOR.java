@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import network.NetworkUtils;
 import network.NeuralNetwork;
-import utils.NetworkUtils;
 
 public class NXOR {
 	public static void main(String[] args) {

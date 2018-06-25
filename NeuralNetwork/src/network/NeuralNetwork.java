@@ -10,8 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import utils.NetworkUtils;
-
 public class NeuralNetwork implements Serializable{
 	public ArrayList<Layer> layers;
 	private double trainingEx;
