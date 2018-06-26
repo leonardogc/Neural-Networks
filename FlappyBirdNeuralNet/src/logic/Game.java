@@ -37,4 +37,12 @@ public class Game {
 		
 		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
 	}
+	
+	public void update(double t) {
+		double d = birdSpeed*t;
+		
+		for(int i = 0; i < this.pipes.size(); i++) {
+			
+		}
+	}
 }

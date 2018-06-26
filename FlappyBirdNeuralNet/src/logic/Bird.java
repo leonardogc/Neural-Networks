@@ -10,6 +10,8 @@ public class Bird {
 	public double distance;
 	public NeuralNetwork brain;
 	
+	public boolean jump;
+	
 	public Bird(double x, double y, double vy, double r, NeuralNetwork brain) {
 		this.x = x;
 		this.y = y;
@@ -17,5 +19,7 @@ public class Bird {
 		this.r = r;
 		this.distance = 0;
 		this.brain = brain;
+		
+		this.jump = false;
 	}
 }
