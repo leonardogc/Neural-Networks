@@ -16,6 +16,7 @@ import logic.Pipe;
 public class GraphicInterface extends JPanel implements KeyListener, MouseListener{
 	
 	public Game game;
+	public static final int nBirds = 2000;
 	public boolean playing;
 	private LoopThread thread;
 	
@@ -28,7 +29,7 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		addMouseListener(this);
 		
 		this.playing = false;
-		this.game = new Game(1);
+		this.game = new Game(nBirds);
 		
 		this.thread = new LoopThread(this);
 		this.thread.start();
@@ -43,10 +44,14 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		g.drawLine(dx, dy, (int)(dx + Game.width), dy);
 		g.drawLine(dx, (int)(dy + Game.height), (int)(dx + Game.width), (int)(dy + Game.height));
 		
+		g.setColor(new Color(255, 0, 0));
+		
 		for(int i = 0; i < this.game.birds.size(); i++) {
 			Bird b = this.game.birds.get(i);
 			g.fillOval((int)(dx+b.x-b.r), (int)(dy+b.y-b.r), (int)(2*b.r), (int)(2*b.r));
 		}
+		
+		g.setColor(Color.BLACK);
 
 		for(int i = 0; i < this.game.pipes.size(); i++) {
 			Pipe p = this.game.pipes.get(i);
@@ -90,7 +95,7 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_R) {
 			this.playing = false;
-			this.game = new Game(1);
+			this.game = new Game(nBirds);
 			repaint();
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {

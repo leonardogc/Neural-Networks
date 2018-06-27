@@ -7,6 +7,7 @@ import network.NeuralNetwork;
 
 public class Game {
 	public static final double g = 800;
+	public static final double maxSpeed = 600;
 	
 	public static final double width = 500;
 	public static final double height = 300;
@@ -33,13 +34,16 @@ public class Game {
 		this.rand = new Random();
 		
 		for(int i = 0; i < nBirds; i++) {
-			this.birds.add(new Bird(birdX, height/2, 0, birdRadius, new NeuralNetwork(new int[] {4, 10, 1})));
+			this.birds.add(new Bird(birdX, height/2, 0, birdRadius, new NeuralNetwork(new int[] {3, 6, 1})));
 		}
 		
 		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
 	}
 	
 	public void update(double t) {
+		if(this.birds.size() == 0) {
+			nextGen();
+		}
 		updatePipes(t);
 		updateBirds(t);
 	}
@@ -53,7 +57,10 @@ public class Game {
 			b.distance+=d;
 			
 			b.vy += g*t;
+			b.vy = Math.min(maxSpeed, b.vy);
 			b.y += b.vy*t;
+			
+			b.think(calculateInputs(b));
 			
 			if(b.jump) {
 				b.jump = false;
@@ -61,6 +68,7 @@ public class Game {
 			}
 			
 			if(b.y < b.r || b.y > height-b.r) {
+				b.calculateFitness(calculateInputs(b).get(1));
 				this.deadBirds.add(b);
 				this.birds.remove(i);
 				i--;
@@ -69,6 +77,7 @@ public class Game {
 			
 			for(int i2 = 0; i2 < this.pipes.size(); i2++) {
 				if(this.pipes.get(i2).collision(b)) {
+					b.calculateFitness(calculateInputs(b).get(1));
 					this.deadBirds.add(b);
 					this.birds.remove(i);
 					i--;
@@ -78,7 +87,7 @@ public class Game {
 			
 		}
 	}
-
+	
 	private void updatePipes(double t) {
 		double d = birdSpeed*t;
 
@@ -104,6 +113,36 @@ public class Game {
 			newPipe();
 		}
 	}
+	
+	private void nextGen() {
+		
+	}
+	
+	//inputs are x to pipe, y to pipe, bird vel
+	private ArrayList<Double> calculateInputs(Bird bird){
+		ArrayList<Double> inputs = new ArrayList<>();
+		
+		for(int i = 0; i < this.pipes.size(); i++) {
+			Pipe pipe = this.pipes.get(i);
+			
+			if(Math.abs(pipe.x - bird.x) < pipe.width/2+bird.r) {
+				inputs.add(0.0);
+				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
+				break;
+			}
+			else if(pipe.x - bird.x > 0) {
+				inputs.add((pipe.x - pipe.width/2 - bird.x)/width);
+				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
+				break;
+			}
+		}
+		
+		inputs.add((bird.vy+maxSpeed)/(2*maxSpeed));
+		
+		return inputs;
+	}
+
+	
 
 	private void newPipe() {
 		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
@@ -111,7 +150,7 @@ public class Game {
 	
 	public void jump() {
 		if(this.birds.size() > 0) {
-			this.birds.get(0).jump = true;
+			//this.birds.get(0).jump = true;
 		}
 	}
 }
