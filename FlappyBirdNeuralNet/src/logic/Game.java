@@ -3,7 +3,10 @@ package logic;
 import java.util.ArrayList;
 import java.util.Random;
 
+import network.Layer;
 import network.NeuralNetwork;
+import network.Neuron;
+import network.NeuronConnection;
 
 public class Game {
 	public static final double g = 800;
@@ -21,9 +24,17 @@ public class Game {
 	public static final double distanceBetweenPipes = 100;
 	public static final double pipeWidth = 50;
 	
+	public static final double passPercentage = 0.8;
+	public static final double crossProb = 0.25;
+	public static final double mutationProb = 0.02;
+	
+	public static int[] nn = new int[] {3, 6, 1};
+	
 	public ArrayList<Bird> birds;
 	private ArrayList<Bird> deadBirds;
 	public ArrayList<Pipe> pipes;
+	
+	private int gen;
 	
 	private Random rand;
 	
@@ -32,22 +43,24 @@ public class Game {
 		this.deadBirds = new ArrayList<>();
 		this.pipes = new ArrayList<>();
 		this.rand = new Random();
+		this.gen = 1;
 		
 		for(int i = 0; i < nBirds; i++) {
-			this.birds.add(new Bird(birdX, height/2, 0, birdRadius, new NeuralNetwork(new int[] {3, 6, 1})));
+			this.birds.add(new Bird(birdX, height/2, 0, birdRadius, new NeuralNetwork(nn)));
 		}
-		
-		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
+
+		newPipe();
 	}
-	
+
 	public void update(double t) {
+		updatePipes(t);
+		updateBirds(t);
+
 		if(this.birds.size() == 0) {
 			nextGen();
 		}
-		updatePipes(t);
-		updateBirds(t);
 	}
-	
+
 	private void updateBirds(double t) {
 		double d = birdSpeed*t;
 		
@@ -115,7 +128,129 @@ public class Game {
 	}
 	
 	private void nextGen() {
+		double totalFitness = 0;
 		
+		ArrayList<Bird> selected = new ArrayList<>();
+		ArrayList<Bird> cross = new ArrayList<>();
+		
+		for(int i = 0; i < this.deadBirds.size(); i++) {
+			totalFitness+=this.deadBirds.get(i).fitness;
+		}
+		
+		for(int i = 0; i < this.deadBirds.size(); i++) {
+			this.deadBirds.get(i).fitness/=totalFitness;
+		}
+		
+		for(int i = 1; i < this.deadBirds.size(); i++) {
+			this.deadBirds.get(i).fitness+=this.deadBirds.get(i-1).fitness;
+		}
+		
+		while(selected.size() < this.deadBirds.size()*passPercentage) {
+			double v = this.rand.nextDouble();
+			
+			for(int i = 0; i < this.deadBirds.size(); i++) {
+				Bird b = this.deadBirds.get(i);
+				
+				if(i == 0) {
+					if(v >= 0 && v < b.fitness) {
+						selected.add(b);
+						break;
+					}
+				}
+				else {
+					if(v >= this.deadBirds.get(i-1).fitness && v < b.fitness) {
+						selected.add(b);
+						break;
+					}
+				}
+			}
+		}
+		
+		for(int i = 0; i < selected.size(); i++) {
+			double v = this.rand.nextDouble();
+			
+			if(v < crossProb) {
+				cross.add(selected.get(i));
+				selected.remove(i);
+				i--;
+			}
+		}
+		
+		if(cross.size() % 2 != 0) {
+			selected.add(cross.get(cross.size()-1));
+			cross.remove(cross.size()-1);
+		}
+		
+		while(cross.size() > 0) {
+			Bird bird1 = cross.get(0);
+			Bird bird2 = cross.get(1);
+			
+			cross.remove(0);
+			cross.remove(0);
+			
+			NeuralNetwork b1 = bird1.brain;
+			NeuralNetwork b2 = bird2.brain;
+			
+			for(int l = 1; l < b1.layers.size() && l < b2.layers.size(); l++) {
+				Layer layer1 = b1.layers.get(l);
+				Layer layer2 = b2.layers.get(l);
+				
+				for(int n = 0; n < layer1.neurons.size() && n < layer2.neurons.size(); n++) {
+					Neuron neuron1 = layer1.neurons.get(n);
+					Neuron neuron2 = layer2.neurons.get(n);
+					
+					for(int pn = 0; pn < neuron1.inputs.size() && pn < neuron2.inputs.size(); pn++) {
+						NeuronConnection conn1 = neuron1.inputs.get(pn);
+						NeuronConnection conn2 = neuron2.inputs.get(pn);
+						
+						double v = this.rand.nextDouble();
+
+						double w1 = conn1.weight;
+						double w2 = conn2.weight;
+
+						conn1.weight = w1*v+w2*(1.0-v);
+						conn2.weight = w1*(1.0-v)+w2*v;
+
+						v = this.rand.nextDouble();
+
+						if(v < mutationProb) {
+							conn1.weight+=(this.rand.nextDouble()*0.2)-0.1;
+						}
+
+						v = this.rand.nextDouble();
+
+						if(v < mutationProb) {
+							conn2.weight+=(this.rand.nextDouble()*0.2)-0.1;
+						}
+					}
+				}
+			}
+			
+			selected.add(bird1);
+			selected.add(bird2);
+		}
+		
+		ArrayList<Bird> nextBirds = new ArrayList<>();
+		
+		while(selected.size() > 0) {
+			nextBirds.add(new Bird(birdX, height/2, 0, birdRadius, selected.get(0).brain));
+			selected.remove(0);
+		}
+		
+		while(nextBirds.size() < this.deadBirds.size()) {
+			nextBirds.add(new Bird(birdX, height/2, 0, birdRadius, new NeuralNetwork(nn)));
+		}
+		
+		this.deadBirds.clear();
+		this.birds.clear();
+		this.pipes.clear();
+		
+		this.birds.addAll(nextBirds);
+		newPipe();
+		
+		this.gen++;
+		
+		System.out.println("Gen " + gen);
 	}
 	
 	//inputs are x to pipe, y to pipe, bird vel

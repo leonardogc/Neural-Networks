@@ -31,7 +31,7 @@ public class Bird {
 	
 	
 	public void think(ArrayList<Double> inputs) {
-		ArrayList<Double> output = brain.getOutput(inputs);
+		ArrayList<Double> output = this.brain.getOutput(inputs);
 		
 		if(output.get(0) > 0.5) {
 			this.jump = true;
@@ -39,6 +39,6 @@ public class Bird {
 	}
 	
 	public void calculateFitness(double y) {
-		fitness = distance - Math.abs(0.5-y);
+		this.fitness = this.distance + (Game.height - (Math.abs(0.5-y)*2*Game.height));
 	}
 }
