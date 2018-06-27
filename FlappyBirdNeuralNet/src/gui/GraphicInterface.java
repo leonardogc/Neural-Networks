@@ -40,8 +40,6 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		
 		g.setColor(Color.BLACK);
 		
-		g.drawLine(dx, dy, dx, (int)(dy + Game.height));
-		g.drawLine((int)(dx + Game.width), dy, (int)(dx + Game.width), (int)(dy + Game.height));
 		g.drawLine(dx, dy, (int)(dx + Game.width), dy);
 		g.drawLine(dx, (int)(dy + Game.height), (int)(dx + Game.width), (int)(dy + Game.height));
 		
@@ -93,6 +91,7 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		if(e.getKeyCode() == KeyEvent.VK_R) {
 			this.playing = false;
 			this.game = new Game(1);
+			repaint();
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 			if(!this.playing) {

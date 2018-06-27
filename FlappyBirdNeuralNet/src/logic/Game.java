@@ -6,18 +6,18 @@ import java.util.Random;
 import network.NeuralNetwork;
 
 public class Game {
-	public static final double g = 300;
+	public static final double g = 800;
 	
 	public static final double width = 500;
 	public static final double height = 300;
 	
 	public static final double birdSpeed = 100;
 	public static final double birdX = 20;
-	public static final double birdBoostUp = 100;
+	public static final double birdBoostUp = 300;
 	public static final double birdRadius = 10;
 	
 	public static final double openingSize = 100;
-	public static final double distanceBetweenPipes = 60;
+	public static final double distanceBetweenPipes = 100;
 	public static final double pipeWidth = 50;
 	
 	public ArrayList<Bird> birds;
@@ -40,30 +40,36 @@ public class Game {
 	}
 	
 	public void update(double t) {
+		updatePipes(t);
+		updateBirds(t);
+	}
+	
+	private void updateBirds(double t) {
 		double d = birdSpeed*t;
 		
-		for(int i = 0; i < this.pipes.size(); i++) {
-			this.pipes.get(i).x-=d;
-			
-			if(this.pipes.get(i).x < -this.pipes.get(i).width/2) {
-				
-			}
-		}
-		
 		for(int i = 0; i < this.birds.size(); i++) {
-			this.birds.get(i).distance+=d;
+			Bird b = this.birds.get(i);
 			
-			this.birds.get(i).vy += g*t;
-			this.birds.get(i).y += this.birds.get(i).vy*t;
+			b.distance+=d;
 			
-			if(this.birds.get(i).jump) {
-				this.birds.get(i).jump = false;
-				this.birds.get(i).vy = -birdBoostUp;
+			b.vy += g*t;
+			b.y += b.vy*t;
+			
+			if(b.jump) {
+				b.jump = false;
+				b.vy = -birdBoostUp;
+			}
+			
+			if(b.y < b.r || b.y > height-b.r) {
+				this.deadBirds.add(b);
+				this.birds.remove(i);
+				i--;
+				continue;
 			}
 			
 			for(int i2 = 0; i2 < this.pipes.size(); i2++) {
-				if(this.pipes.get(i2).collision(this.birds.get(i))) {
-					this.deadBirds.add(this.birds.get(i));
+				if(this.pipes.get(i2).collision(b)) {
+					this.deadBirds.add(b);
 					this.birds.remove(i);
 					i--;
 					break;
@@ -71,7 +77,36 @@ public class Game {
 			}
 			
 		}
-		  
+	}
+
+	private void updatePipes(double t) {
+		double d = birdSpeed*t;
+
+		if(this.pipes.size() == 0) {
+			newPipe();
+		}
+		
+		for(int i = 0; i < this.pipes.size(); i++) {
+			this.pipes.get(i).x-=d;
+		}
+		
+		Pipe pipe;
+		
+		pipe = this.pipes.get(0);
+
+		if(pipe.x < -pipe.width/2) {
+			this.pipes.remove(0);
+		}
+		
+		pipe = this.pipes.get(this.pipes.size()-1);
+		
+		if(width-(pipe.x+pipe.width/2) > distanceBetweenPipes) {
+			newPipe();
+		}
+	}
+
+	private void newPipe() {
+		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
 	}
 	
 	public void jump() {
