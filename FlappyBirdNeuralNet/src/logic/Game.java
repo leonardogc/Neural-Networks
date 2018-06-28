@@ -11,20 +11,20 @@ import network.Neuron;
 import network.NeuronConnection;
 
 public class Game {
-	public static final double g = 800;
-	public static final double maxSpeed = 600;
+	public static final double g = 1400;
+	public static final double maxSpeed = 1200;
 	
-	public static final double width = 500;
-	public static final double height = 300;
+	public static final double width = 800;
+	public static final double height = 500;
 	
-	public static final double birdSpeed = 100;
-	public static final double birdX = 20;
-	public static final double birdBoostUp = 300;
-	public static final double birdRadius = 10;
+	public static final double birdSpeed = 200;
+	public static final double birdX = 40;
+	public static final double birdBoostUp = 550;
+	public static final double birdRadius = 20;
 	
-	public static final double openingSize = 100;
-	public static final double distanceBetweenPipes = 100;
-	public static final double pipeWidth = 50;
+	public static final double openingSize = 180;
+	public static final double distanceBetweenPipes = 200;
+	public static final double pipeWidth = 100;
 	
 	public static final double passPercentage = 0.9;
 	public static final double crossProb = 1.0;

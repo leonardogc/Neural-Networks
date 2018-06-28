@@ -37,12 +37,12 @@ public class Window {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 600, 400);
+		frame.setBounds(100, 100, 900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new GraphicInterface();
-		panel.setBounds(0, 0, 584, 361);
+		panel.setBounds(0, 0, 884, 561);
 		frame.getContentPane().add(panel);
 	}
 }

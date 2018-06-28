@@ -24,8 +24,8 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 	
 	private BufferedImage birdImage;
 	
-	private int dx = (int)(584 - Game.width)/2;
-	private int dy = (int)(361 - Game.height)/2;
+	private int dx = (int)(884 - Game.width)/2;
+	private int dy = (int)(561 - Game.height)/2;
 	
 	
 	public GraphicInterface() {
