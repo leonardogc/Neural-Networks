@@ -26,7 +26,7 @@ public class Game {
 	public static final double distanceBetweenPipes = 100;
 	public static final double pipeWidth = 50;
 	
-	public static final double passPercentage = 1.0;
+	public static final double passPercentage = 0.9;
 	public static final double crossProb = 1.0;
 	public static final double mutationProb = 0.04;
 	public static final double bestBirdsN = 10;
@@ -203,6 +203,8 @@ public class Game {
 			selected.add(cross.get(cross.size()-1));
 			cross.remove(cross.size()-1);
 		}
+		
+		Collections.shuffle(cross);
 		
 		while(cross.size() > 0) {
 			NeuralNetwork b1 = cross.get(0);
