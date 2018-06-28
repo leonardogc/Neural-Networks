@@ -16,7 +16,7 @@ import logic.Pipe;
 public class GraphicInterface extends JPanel implements KeyListener, MouseListener{
 	
 	public Game game;
-	public static final int nBirds = 200;
+	public static final int nBirds = 100;
 	public boolean playing;
 	private LoopThread thread;
 	

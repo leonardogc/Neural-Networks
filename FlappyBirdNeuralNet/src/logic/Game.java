@@ -28,7 +28,7 @@ public class Game {
 	
 	public static final double passPercentage = 1.0;
 	public static final double crossProb = 1.0;
-	public static final double mutationProb = 0.06;
+	public static final double mutationProb = 0.04;
 	public static final double bestBirdsN = 10;
 	
 	public static int[] nn = new int[] {3, 6, 1};

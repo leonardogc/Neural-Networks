@@ -40,9 +40,8 @@ public class LoopThread extends Thread{
 				g.repaint();
 			}
 			
-			while(speedUp) {
+			while(speedUp && g.playing) {
 				g.game.update(1.0/max_fps);
-				g.repaint();
 			}
 
 			frameDuration=System.nanoTime()-startTime;
