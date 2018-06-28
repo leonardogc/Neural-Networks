@@ -5,11 +5,13 @@ import java.awt.event.WindowEvent;
 public class LoopThread extends Thread{
 	private boolean running;
 	private double max_fps;
+	public boolean speedUp;
 	private GraphicInterface g;
 
 	public LoopThread(GraphicInterface g){
-		running=true;
-		max_fps=120;
+		this.running=true;
+		this.speedUp = false;
+		this.max_fps=120;
 		this.g=g;
 	}
 
@@ -34,6 +36,11 @@ public class LoopThread extends Thread{
 			startTime= System.nanoTime();
 
 			if(g.playing) {
+				g.game.update(1.0/max_fps);
+				g.repaint();
+			}
+			
+			while(speedUp) {
 				g.game.update(1.0/max_fps);
 				g.repaint();
 			}

@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 import network.Layer;
@@ -24,9 +26,10 @@ public class Game {
 	public static final double distanceBetweenPipes = 100;
 	public static final double pipeWidth = 50;
 	
-	public static final double passPercentage = 0.8;
-	public static final double crossProb = 0.25;
-	public static final double mutationProb = 0.02;
+	public static final double passPercentage = 1.0;
+	public static final double crossProb = 1.0;
+	public static final double mutationProb = 0.06;
+	public static final double bestBirdsN = 10;
 	
 	public static int[] nn = new int[] {3, 6, 1};
 	
@@ -130,8 +133,28 @@ public class Game {
 	private void nextGen() {
 		double totalFitness = 0;
 		
-		ArrayList<Bird> selected = new ArrayList<>();
-		ArrayList<Bird> cross = new ArrayList<>();
+		ArrayList<NeuralNetwork> selected = new ArrayList<>();
+		ArrayList<NeuralNetwork> cross = new ArrayList<>();
+		ArrayList<NeuralNetwork> bestBirds = new ArrayList<>();
+		
+		Collections.sort(this.deadBirds, new Comparator<Bird>() {
+			@Override
+			public int compare(Bird o1, Bird o2) {
+				if(o1.fitness > o2.fitness) {
+					return -1;
+				}
+				
+				if(o1.fitness < o2.fitness) {
+					return 1;
+				}
+				
+				return 0;
+			}
+		});
+		
+		for(int i = 0; i < this.deadBirds.size() && i < bestBirdsN; i++) {
+			bestBirds.add(this.deadBirds.get(i).brain.copy());
+		}
 		
 		for(int i = 0; i < this.deadBirds.size(); i++) {
 			totalFitness+=this.deadBirds.get(i).fitness;
@@ -145,7 +168,7 @@ public class Game {
 			this.deadBirds.get(i).fitness+=this.deadBirds.get(i-1).fitness;
 		}
 		
-		while(selected.size() < this.deadBirds.size()*passPercentage) {
+		while(selected.size() < this.deadBirds.size()*passPercentage-bestBirdsN) {
 			double v = this.rand.nextDouble();
 			
 			for(int i = 0; i < this.deadBirds.size(); i++) {
@@ -153,13 +176,13 @@ public class Game {
 				
 				if(i == 0) {
 					if(v >= 0 && v < b.fitness) {
-						selected.add(b);
+						selected.add(b.brain.copy());
 						break;
 					}
 				}
 				else {
 					if(v >= this.deadBirds.get(i-1).fitness && v < b.fitness) {
-						selected.add(b);
+						selected.add(b.brain.copy());
 						break;
 					}
 				}
@@ -182,14 +205,11 @@ public class Game {
 		}
 		
 		while(cross.size() > 0) {
-			Bird bird1 = cross.get(0);
-			Bird bird2 = cross.get(1);
+			NeuralNetwork b1 = cross.get(0);
+			NeuralNetwork b2 = cross.get(1);
 			
 			cross.remove(0);
 			cross.remove(0);
-			
-			NeuralNetwork b1 = bird1.brain;
-			NeuralNetwork b2 = bird2.brain;
 			
 			for(int l = 1; l < b1.layers.size() && l < b2.layers.size(); l++) {
 				Layer layer1 = b1.layers.get(l);
@@ -214,27 +234,32 @@ public class Game {
 						v = this.rand.nextDouble();
 
 						if(v < mutationProb) {
-							conn1.weight+=(this.rand.nextDouble()*0.2)-0.1;
+							conn1.weight+=(this.rand.nextDouble()*2.0)-1.0;
 						}
 
 						v = this.rand.nextDouble();
 
 						if(v < mutationProb) {
-							conn2.weight+=(this.rand.nextDouble()*0.2)-0.1;
+							conn2.weight+=(this.rand.nextDouble()*2.0)-1.0;
 						}
 					}
 				}
 			}
 			
-			selected.add(bird1);
-			selected.add(bird2);
+			selected.add(b1);
+			selected.add(b2);
 		}
 		
 		ArrayList<Bird> nextBirds = new ArrayList<>();
 		
 		while(selected.size() > 0) {
-			nextBirds.add(new Bird(birdX, height/2, 0, birdRadius, selected.get(0).brain));
+			nextBirds.add(new Bird(birdX, height/2, 0, birdRadius, selected.get(0)));
 			selected.remove(0);
+		}
+		
+		while(bestBirds.size() > 0) {
+			nextBirds.add(new Bird(birdX, height/2, 0, birdRadius, bestBirds.get(0)));
+			bestBirds.remove(0);
 		}
 		
 		while(nextBirds.size() < this.deadBirds.size()) {

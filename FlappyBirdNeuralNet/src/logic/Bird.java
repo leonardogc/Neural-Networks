@@ -41,4 +41,19 @@ public class Bird {
 	public void calculateFitness(double y) {
 		this.fitness = this.distance + (Game.height - (Math.abs(0.5-y)*2*Game.height));
 	}
+	
+	public Bird copy() {
+		Bird copy = new Bird(0,0,0,0,null);
+		
+		copy.brain = this.brain.copy();
+		copy.distance = this.distance;
+		copy.fitness = this.fitness;
+		copy.jump = this.jump;
+		copy.r = this.r;
+		copy.vy = this.vy;
+		copy.x = this.x;
+		copy.y = this.y;
+		
+		return copy;
+	}
 }

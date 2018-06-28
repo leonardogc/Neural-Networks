@@ -16,7 +16,7 @@ import logic.Pipe;
 public class GraphicInterface extends JPanel implements KeyListener, MouseListener{
 	
 	public Game game;
-	public static final int nBirds = 2000;
+	public static final int nBirds = 200;
 	public boolean playing;
 	private LoopThread thread;
 	
@@ -105,6 +105,9 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 			else {
 				this.game.jump();
 			}
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_S) {
+			this.thread.speedUp = !this.thread.speedUp;
 		}
 	}
 
