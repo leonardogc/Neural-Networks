@@ -6,7 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import logic.Bird;
@@ -16,9 +19,10 @@ import logic.Pipe;
 public class GraphicInterface extends JPanel implements KeyListener, MouseListener{
 	
 	public Game game;
-	public static final int nBirds = 100;
 	public boolean playing;
 	private LoopThread thread;
+	
+	private BufferedImage birdImage;
 	
 	private int dx = (int)(584 - Game.width)/2;
 	private int dy = (int)(361 - Game.height)/2;
@@ -28,8 +32,15 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		addKeyListener(this);
 		addMouseListener(this);
 		
+		try {
+			this.birdImage = ImageIO.read(GraphicInterface.class.getResource("/gui/resources/bird.png"));
+		} 
+		catch (IOException e) {
+			System.out.println("Could not read images");
+		}
+		
 		this.playing = false;
-		this.game = new Game(nBirds);
+		this.game = new Game();
 		
 		this.thread = new LoopThread(this);
 		this.thread.start();
@@ -44,14 +55,12 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		g.drawLine(dx, dy, (int)(dx + Game.width), dy);
 		g.drawLine(dx, (int)(dy + Game.height), (int)(dx + Game.width), (int)(dy + Game.height));
 		
-		g.setColor(new Color(255, 0, 0));
-		
 		for(int i = 0; i < this.game.birds.size(); i++) {
 			Bird b = this.game.birds.get(i);
-			g.fillOval((int)(dx+b.x-b.r), (int)(dy+b.y-b.r), (int)(2*b.r), (int)(2*b.r));
+			g.drawImage(this.birdImage, (int)(dx+b.x-b.r), (int)(dy+b.y-b.r), (int)(2*b.r), (int)(2*b.r), null);
 		}
 		
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(0, 200, 0));
 
 		for(int i = 0; i < this.game.pipes.size(); i++) {
 			Pipe p = this.game.pipes.get(i);
@@ -95,7 +104,7 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_R) {
 			this.playing = false;
-			this.game = new Game(nBirds);
+			this.game = new Game();
 			repaint();
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {

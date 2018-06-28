@@ -31,6 +31,8 @@ public class Game {
 	public static final double mutationProb = 0.04;
 	public static final double bestBirdsN = 10;
 	
+	public static final int nBirds = 100;
+	
 	public static int[] nn = new int[] {3, 6, 1};
 	
 	public ArrayList<Bird> birds;
@@ -41,7 +43,7 @@ public class Game {
 	
 	private Random rand;
 	
-	public Game(int nBirds) {
+	public Game() {
 		this.birds = new ArrayList<>();
 		this.deadBirds = new ArrayList<>();
 		this.pipes = new ArrayList<>();

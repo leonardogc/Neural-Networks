@@ -40,6 +40,10 @@ public class Bird {
 	
 	public void calculateFitness(double y) {
 		this.fitness = this.distance + (Game.height - (Math.abs(0.5-y)*2*Game.height));
+		
+		if(this.fitness == 0) {
+			this.fitness = 0.01;
+		}
 	}
 	
 	public Bird copy() {
