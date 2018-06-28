@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Neuron implements Serializable{
-	public double activation; //always between 0 and 1, inclusive
+	public double activation;
 	public double z;
 	public double bias;
 	

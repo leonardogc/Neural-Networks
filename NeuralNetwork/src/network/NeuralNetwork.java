@@ -263,6 +263,37 @@ public class NeuralNetwork implements Serializable{
 		}
 	}
 	
+	public NeuralNetwork copy() {
+		int[] size = new int[this.layers.size()];
+		
+		for(int i = 0; i < this.layers.size(); i++) {
+			size[i] = this.layers.get(i).neurons.size();
+		}
+		
+		NeuralNetwork copy = new NeuralNetwork(size);
+		
+		for(int l = 0; l < copy.layers.size(); l++) {
+			Layer layer = copy.layers.get(l);
+			Layer thisLayer = this.layers.get(l);
+			
+			for(int n = 0; n < layer.neurons.size(); n++) {
+				Neuron neuron = layer.neurons.get(n);
+				Neuron thisNeuron = thisLayer.neurons.get(n);
+				
+				neuron.bias = thisNeuron.bias;
+				
+				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
+					NeuronConnection conn = neuron.inputs.get(pn);
+					NeuronConnection thisConn = thisNeuron.inputs.get(pn);
+					
+					conn.weight = thisConn.weight;
+				}
+			}
+		}
+		
+		return copy;
+	}
+	
 	
 	public static void main(String[] args) {
 		NeuralNetwork n = new NeuralNetwork(new int[] {2, 3, 2});
