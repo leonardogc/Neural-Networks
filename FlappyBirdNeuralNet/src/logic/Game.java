@@ -25,6 +25,7 @@ public class Game {
 	public static final double openingSize = 180;
 	public static final double distanceBetweenPipes = 200;
 	public static final double pipeWidth = 100;
+	public static final double pipeVel = 0;
 	
 	public static final double passPercentage = 0.9;
 	public static final double crossProb = 1.0;
@@ -113,11 +114,18 @@ public class Game {
 			newPipe();
 		}
 		
-		for(int i = 0; i < this.pipes.size(); i++) {
-			this.pipes.get(i).x-=d;
-		}
-		
 		Pipe pipe;
+		
+		for(int i = 0; i < this.pipes.size(); i++) {
+			pipe = this.pipes.get(i);
+			
+			pipe.x-=d;
+			pipe.openingY+=pipe.vy*t;
+			
+			if(pipe.openingY <= pipe.openingSize/2 || pipe.openingY >= height-pipe.openingSize/2) {
+				pipe.vy*=-1;
+			}
+		}
 		
 		pipe = this.pipes.get(0);
 
@@ -316,11 +324,13 @@ public class Game {
 			if(Math.abs(pipe.x - bird.x) < pipe.width/2+bird.r) {
 				inputs.add(0.0);
 				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
+				//inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
 				break;
 			}
 			else if(pipe.x - bird.x > 0) {
 				inputs.add((pipe.x - pipe.width/2 - bird.x)/width);
 				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
+				//inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
 				break;
 			}
 		}
@@ -333,7 +343,13 @@ public class Game {
 	
 
 	private void newPipe() {
-		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize));
+		double vel = pipeVel;
+		
+		if(this.rand.nextInt(2) == 1) {
+			vel*=-1;
+		}
+		
+		this.pipes.add(new Pipe(pipeWidth, width+pipeWidth/2, this.rand.nextInt((int)(height-openingSize))+openingSize/2,openingSize,vel));
 	}
 	
 	public void jump() {

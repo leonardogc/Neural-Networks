@@ -3,14 +3,16 @@ package logic;
 public class Pipe {
 	public double width;
 	public double x;
+	public double vy;
 	public double openingY;
 	public double openingSize;
 	
-	public Pipe(double width, double x, double openingY, double openingSize) {
+	public Pipe(double width, double x, double openingY, double openingSize, double vy) {
 		this.width = width;
 		this.x = x;
 		this.openingY = openingY;
 		this.openingSize = openingSize;
+		this.vy = vy;
 	}
 	
 	public boolean collision(Bird bird) {
