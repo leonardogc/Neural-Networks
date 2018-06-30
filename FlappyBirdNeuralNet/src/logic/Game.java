@@ -122,8 +122,11 @@ public class Game {
 			pipe.x-=d;
 			pipe.openingY+=pipe.vy*t;
 			
-			if(pipe.openingY <= pipe.openingSize/2 || pipe.openingY >= height-pipe.openingSize/2) {
-				pipe.vy*=-1;
+			if(pipe.openingY <= pipe.openingSize/2) {
+				pipe.vy=Math.abs(pipe.vy);
+			}
+			else if(pipe.openingY >= height-pipe.openingSize/2){
+				pipe.vy=-Math.abs(pipe.vy);
 			}
 		}
 		
