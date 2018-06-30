@@ -223,11 +223,23 @@ public class Game {
 					Neuron neuron1 = layer1.neurons.get(n);
 					Neuron neuron2 = layer2.neurons.get(n);
 					
+					double v = this.rand.nextDouble();
+
+					if(v < mutationProb) {
+						neuron1.bias+=random();
+					}
+
+					v = this.rand.nextDouble();
+
+					if(v < mutationProb) {
+						neuron2.bias+=random();
+					}
+					
 					for(int pn = 0; pn < neuron1.inputs.size() && pn < neuron2.inputs.size(); pn++) {
 						NeuronConnection conn1 = neuron1.inputs.get(pn);
 						NeuronConnection conn2 = neuron2.inputs.get(pn);
 						
-						double v = this.rand.nextDouble();
+						v = this.rand.nextDouble();
 
 						double w1 = conn1.weight;
 						double w2 = conn2.weight;
@@ -238,13 +250,13 @@ public class Game {
 						v = this.rand.nextDouble();
 
 						if(v < mutationProb) {
-							conn1.weight+=(this.rand.nextDouble()*2.0)-1.0;
+							conn1.weight+=random();
 						}
 
 						v = this.rand.nextDouble();
 
 						if(v < mutationProb) {
-							conn2.weight+=(this.rand.nextDouble()*2.0)-1.0;
+							conn2.weight+=random();
 						}
 					}
 				}
@@ -280,6 +292,10 @@ public class Game {
 		this.gen++;
 		
 		System.out.println("Gen " + gen);
+	}
+	
+	private double random() {
+		return (this.rand.nextDouble()*2.0)-1.0;
 	}
 	
 	//inputs are x to pipe, y to pipe, bird vel
