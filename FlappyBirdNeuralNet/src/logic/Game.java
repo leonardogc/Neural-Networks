@@ -34,7 +34,7 @@ public class Game {
 	
 	public static final int nBirds = 200;
 	
-	public static int[] nn = new int[] {4, 6, 1};
+	public static int[] nn = new int[] {4, 5, 1};
 	
 	public ArrayList<Bird> birds;
 	private ArrayList<Bird> deadBirds;
