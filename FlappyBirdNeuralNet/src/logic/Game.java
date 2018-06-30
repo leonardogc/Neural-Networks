@@ -127,6 +127,7 @@ public class Game {
 			}
 		}
 		
+		
 		pipe = this.pipes.get(0);
 
 		if(pipe.x < -pipe.width/2) {
