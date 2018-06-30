@@ -32,9 +32,9 @@ public class Game {
 	public static final double mutationProb = 0.08;
 	public static final double bestBirdsN = 10;
 	
-	public static final int nBirds = 100;
+	public static final int nBirds = 200;
 	
-	public static int[] nn = new int[] {3, 6, 1};
+	public static int[] nn = new int[] {4, 6, 1};
 	
 	public ArrayList<Bird> birds;
 	private ArrayList<Bird> deadBirds;
@@ -315,7 +315,7 @@ public class Game {
 		return (this.rand.nextDouble()*2.0)-1.0;
 	}
 	
-	//inputs are x to pipe, y to pipe, bird vel
+	//inputs are x to pipe, y to pipe, pipe vel, bird vel
 	private ArrayList<Double> calculateInputs(Bird bird){
 		ArrayList<Double> inputs = new ArrayList<>();
 		
@@ -325,13 +325,23 @@ public class Game {
 			if(Math.abs(pipe.x - bird.x) < pipe.width/2+bird.r) {
 				inputs.add(0.0);
 				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
-				//inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
+				if(pipeVel == 0) {
+					inputs.add(0.0);
+				}
+				else {
+					inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
+				}
 				break;
 			}
 			else if(pipe.x - bird.x > 0) {
 				inputs.add((pipe.x - pipe.width/2 - bird.x)/width);
 				inputs.add(((pipe.openingY-bird.y)+height)/(2*height));
-				//inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
+				if(pipeVel == 0) {
+					inputs.add(0.0);
+				}
+				else {
+					inputs.add((pipe.vy+pipeVel)/(2*pipeVel));
+				}
 				break;
 			}
 		}
