@@ -225,6 +225,14 @@ public class Game {
 					
 					double v = this.rand.nextDouble();
 
+					double bias1 = neuron1.bias;
+					double bias2 = neuron2.bias;
+
+					neuron1.bias = bias1*v+bias2*(1.0-v);
+					neuron2.bias = bias1*(1.0-v)+bias2*v;
+					
+					v = this.rand.nextDouble();
+
 					if(v < mutationProb) {
 						neuron1.bias+=random();
 					}
