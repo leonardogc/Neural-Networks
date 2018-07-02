@@ -40,7 +40,7 @@ public class ImageRecognition {
 				image.add(Double.parseDouble(sLine[i])/255.0);
 			}
 
-			images.add(new Image(image, value));
+			images.add(new Image(image, value, 10));
 			counter++;
 			
 			if(counter % 1000 == 0) {

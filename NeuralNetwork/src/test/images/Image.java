@@ -6,11 +6,11 @@ public class Image {
 	public ArrayList<Double> image;
 	public ArrayList<Double> value;
 	
-	public Image(ArrayList<Double> image, int value) {
+	public Image(ArrayList<Double> image, int value, int size) {
 		this.image = image;
 		this.value = new ArrayList<>();
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < size; i++) {
 			if(i == value) {
 				this.value.add(1.0);
 			}
