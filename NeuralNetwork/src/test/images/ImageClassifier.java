@@ -14,7 +14,7 @@ import network.NetworkUtils;
 import network.NeuralNetwork;
 
 public class ImageClassifier {
-	public static final int types = 3;
+	public static final int types = 4;
 	public static final int imagePixels = 28*28;
 
 	public static ArrayList<Image> loadImages(int from, int to, String path, int value) throws IOException{
@@ -25,7 +25,7 @@ public class ImageClassifier {
 		
 		int counter=0;
 		
-		int c=79+from*imagePixels;
+		int c=80+from*imagePixels;
 		
 		while(data.length-c >= imagePixels && counter < (to-from)) {
 			ArrayList<Double> image = new ArrayList<>();
@@ -46,15 +46,23 @@ public class ImageClassifier {
 		return images;
 	}
 	
-	public static void main(String[] args) throws IOException {
-		//TRAIN
-		int from = 0;
-		int to = from + 8000;
-		
+	public static ArrayList<Image> imageList(int from, int to) throws IOException {
 		ArrayList<Image> images = new ArrayList<>();
+		
 		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\eiffeltower.npy", 0));
 		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\monalisa.npy", 1));
 		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\car.npy", 2));
+		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\axe.npy", 3));
+		
+		return images;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		//TRAIN
+		int from = 0;
+		int to = from + 7000;
+		
+		ArrayList<Image> images = imageList(from, to);
 
 		Collections.shuffle(images);
 
@@ -106,10 +114,7 @@ public class ImageClassifier {
 		/*int from = 10000;
 		int to = from + 2000;
 
-		ArrayList<Image> images = new ArrayList<>();
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\eiffeltower.npy", 0));
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\monalisa.npy", 1));
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\car.npy", 2));
+		ArrayList<Image> images = imageList(from, to);
 		
 		Collections.shuffle(images);
 
@@ -158,10 +163,7 @@ public class ImageClassifier {
 		/*int from = 10000;
 		int to = from + 2000;
 
-		ArrayList<Image> images = new ArrayList<>();
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\eiffeltower.npy", 0));
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\monalisa.npy", 1));
-		images.addAll(loadImages(from, to, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\quickdraw\\car.npy", 2));
+		ArrayList<Image> images = imageList(from, to);
 
 		Collections.shuffle(images);
 
