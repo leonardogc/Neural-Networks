@@ -118,6 +118,9 @@ public class GraphicInterface extends JPanel implements KeyListener, MouseListen
 		else if(e.getKeyCode() == KeyEvent.VK_S) {
 			this.thread.speedUp = !this.thread.speedUp;
 		}
+		else if(e.getKeyCode() == KeyEvent.VK_B) {
+			this.thread.saveBird = true;
+		}
 	}
 
 	@Override

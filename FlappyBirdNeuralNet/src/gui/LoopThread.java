@@ -6,11 +6,13 @@ public class LoopThread extends Thread{
 	private boolean running;
 	private double max_fps;
 	public boolean speedUp;
+	public boolean saveBird;
 	private GraphicInterface g;
 
 	public LoopThread(GraphicInterface g){
 		this.running=true;
 		this.speedUp = false;
+		this.saveBird = false;
 		this.max_fps=120;
 		this.g=g;
 	}
@@ -42,6 +44,11 @@ public class LoopThread extends Thread{
 			
 			while(speedUp && g.playing) {
 				g.game.update(1.0/max_fps);
+			}
+			
+			if(saveBird) {
+				g.game.saveBestBird();
+				saveBird = false;
 			}
 
 			frameDuration=System.nanoTime()-startTime;

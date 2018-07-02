@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -369,6 +370,29 @@ public class Game {
 	public void jump() {
 		if(this.birds.size() > 0) {
 			//this.birds.get(0).jump = true;
+		}
+	}
+	
+	public void saveBestBird() {
+		Collections.sort(this.birds, new Comparator<Bird>() {
+			@Override
+			public int compare(Bird o1, Bird o2) {
+				if(o1.distance > o2.distance) {
+					return -1;
+				}
+				
+				if(o1.distance < o2.distance) {
+					return 1;
+				}
+				
+				return 0;
+			}
+		});
+		
+		try {
+			this.birds.get(0).brain.toFile("bird.txt");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
