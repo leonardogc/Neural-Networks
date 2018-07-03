@@ -18,5 +18,8 @@ public class Image {
 				this.value.add(0.0);
 			}
 		}
+		
+		this.image.trimToSize();
+		this.value.trimToSize();
 	}
 }
