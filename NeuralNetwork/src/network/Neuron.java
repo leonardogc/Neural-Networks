@@ -10,7 +10,7 @@ public class Neuron implements Serializable{
 	
 	public double dC_dB;
 	public double temp_dC_dA;
-	public double temp_var;
+	public double temp_dC_dZ;
 	
 	//connections from other neurons to this neuron
 	public ArrayList<NeuronConnection> inputs;	
@@ -21,7 +21,7 @@ public class Neuron implements Serializable{
 		this.inputs = new ArrayList<>();
 		this.dC_dB = 0;
 		this.temp_dC_dA = 0;
-		this.temp_var = 0;
+		this.temp_dC_dZ = 0;
 		this.z = 0;
 	}
 	
@@ -31,7 +31,7 @@ public class Neuron implements Serializable{
 		this.inputs = new ArrayList<>();
 		this.dC_dB = 0;
 		this.temp_dC_dA = 0;
-		this.temp_var = 0;
+		this.temp_dC_dZ = 0;
 		this.z = 0;
 	}
 }
