@@ -220,22 +220,22 @@ public class NeuralNetwork implements Serializable{
 				Neuron neuron = layer.neurons.get(n);
 
 				if(l == this.layers.size() - 1) {
-					neuron.temp_dC_dA = NetworkUtils.dCost(neuron.activation, expectedOutputs.get(n));
+					neuron.dC_dA = NetworkUtils.dCost(neuron.activation, expectedOutputs.get(n));
 				}
 
-				neuron.temp_dC_dZ = NetworkUtils.dAct(neuron.z)*neuron.temp_dC_dA;
-				neuron.dC_dB += neuron.temp_dC_dZ;
+				double dC_dZ = NetworkUtils.dAct(neuron.z)*neuron.dC_dA;
+				neuron.dC_dB += dC_dZ;
 
 				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
 					NeuronConnection conn = neuron.inputs.get(pn);
 
-					conn.dC_dW += conn.from.activation*conn.to.temp_dC_dZ;
+					conn.dC_dW += conn.from.activation*dC_dZ;
 					
 					if(n == 0) {
-						conn.from.temp_dC_dA = 0;
+						conn.from.dC_dA = 0;
 					}
 					
-					conn.from.temp_dC_dA += conn.weight*conn.to.temp_dC_dZ;
+					conn.from.dC_dA += conn.weight*dC_dZ;
 				}
 			}
 		}
