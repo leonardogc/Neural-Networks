@@ -3,11 +3,11 @@ package network;
 import java.io.Serializable;
 
 public class NetworkUtils implements Serializable{
-	public static double s(double x) {
+	public static double act(double x) {
 		return 1.0/(1.0 + Math.exp(-x));
 	}
 	
-	public static double ds(double x) {
+	public static double dAct(double x) {
 		return Math.exp(-x)/Math.pow(1 + Math.exp(-x), 2);
 	}
 	

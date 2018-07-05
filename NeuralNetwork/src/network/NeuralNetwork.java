@@ -177,7 +177,7 @@ public class NeuralNetwork implements Serializable{
 				}
 				
 				neuron.z = activation;
-				neuron.activation = NetworkUtils.s(activation);
+				neuron.activation = NetworkUtils.act(activation);
 			}
 		}
 	}
@@ -223,7 +223,7 @@ public class NeuralNetwork implements Serializable{
 					neuron.temp_dC_dA = NetworkUtils.dCost(neuron.activation, expectedOutputs.get(n));
 				}
 
-				neuron.temp_dC_dZ = NetworkUtils.ds(neuron.z)*neuron.temp_dC_dA;
+				neuron.temp_dC_dZ = NetworkUtils.dAct(neuron.z)*neuron.temp_dC_dA;
 				neuron.dC_dB += neuron.temp_dC_dZ;
 
 				for(int pn = 0; pn < neuron.inputs.size(); pn++) {
