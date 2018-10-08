@@ -294,6 +294,66 @@ public class NeuralNetwork implements Serializable{
 		return copy;
 	}
 	
+	public static void cross(NeuralNetwork n1, NeuralNetwork n2, double mutationProb, double mutationRange, Random rand) {
+		for(int l = 1; l < n1.layers.size() && l < n2.layers.size(); l++) {
+			Layer layer1 = n1.layers.get(l);
+			Layer layer2 = n2.layers.get(l);
+			
+			for(int n = 0; n < layer1.neurons.size() && n < layer2.neurons.size(); n++) {
+				Neuron neuron1 = layer1.neurons.get(n);
+				Neuron neuron2 = layer2.neurons.get(n);
+				
+				double v = rand.nextDouble();
+
+				double bias1 = neuron1.bias;
+				double bias2 = neuron2.bias;
+
+				neuron1.bias = bias1*v+bias2*(1.0-v);
+				neuron2.bias = bias1*(1.0-v)+bias2*v;
+				
+				v = rand.nextDouble();
+
+				if(v < mutationProb) {
+					neuron1.bias+=random(rand, mutationRange);
+				}
+
+				v = rand.nextDouble();
+
+				if(v < mutationProb) {
+					neuron2.bias+=random(rand, mutationRange);
+				}
+				
+				for(int pn = 0; pn < neuron1.inputs.size() && pn < neuron2.inputs.size(); pn++) {
+					NeuronConnection conn1 = neuron1.inputs.get(pn);
+					NeuronConnection conn2 = neuron2.inputs.get(pn);
+					
+					v = rand.nextDouble();
+
+					double w1 = conn1.weight;
+					double w2 = conn2.weight;
+
+					conn1.weight = w1*v+w2*(1.0-v);
+					conn2.weight = w1*(1.0-v)+w2*v;
+
+					v = rand.nextDouble();
+
+					if(v < mutationProb) {
+						conn1.weight+=random(rand, mutationRange);
+					}
+
+					v = rand.nextDouble();
+
+					if(v < mutationProb) {
+						conn2.weight+=random(rand, mutationRange);
+					}
+				}
+			}
+		}
+	}
+	
+	private static double random(Random rand, double range) {
+		return (rand.nextDouble()*range)-(range/2);
+	}
 	
 	public static void main(String[] args) {
 		NeuralNetwork n = new NeuralNetwork(new int[] {2, 3, 2});

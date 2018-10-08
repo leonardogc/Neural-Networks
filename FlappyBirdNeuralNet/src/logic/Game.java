@@ -228,60 +228,7 @@ public class Game {
 			cross.remove(0);
 			cross.remove(0);
 			
-			for(int l = 1; l < b1.layers.size() && l < b2.layers.size(); l++) {
-				Layer layer1 = b1.layers.get(l);
-				Layer layer2 = b2.layers.get(l);
-				
-				for(int n = 0; n < layer1.neurons.size() && n < layer2.neurons.size(); n++) {
-					Neuron neuron1 = layer1.neurons.get(n);
-					Neuron neuron2 = layer2.neurons.get(n);
-					
-					double v = this.rand.nextDouble();
-
-					double bias1 = neuron1.bias;
-					double bias2 = neuron2.bias;
-
-					neuron1.bias = bias1*v+bias2*(1.0-v);
-					neuron2.bias = bias1*(1.0-v)+bias2*v;
-					
-					v = this.rand.nextDouble();
-
-					if(v < mutationProb) {
-						neuron1.bias+=random();
-					}
-
-					v = this.rand.nextDouble();
-
-					if(v < mutationProb) {
-						neuron2.bias+=random();
-					}
-					
-					for(int pn = 0; pn < neuron1.inputs.size() && pn < neuron2.inputs.size(); pn++) {
-						NeuronConnection conn1 = neuron1.inputs.get(pn);
-						NeuronConnection conn2 = neuron2.inputs.get(pn);
-						
-						v = this.rand.nextDouble();
-
-						double w1 = conn1.weight;
-						double w2 = conn2.weight;
-
-						conn1.weight = w1*v+w2*(1.0-v);
-						conn2.weight = w1*(1.0-v)+w2*v;
-
-						v = this.rand.nextDouble();
-
-						if(v < mutationProb) {
-							conn1.weight+=random();
-						}
-
-						v = this.rand.nextDouble();
-
-						if(v < mutationProb) {
-							conn2.weight+=random();
-						}
-					}
-				}
-			}
+			NeuralNetwork.cross(b1, b2, mutationProb, 2, this.rand);
 			
 			selected.add(b1);
 			selected.add(b2);
@@ -313,10 +260,6 @@ public class Game {
 		this.gen++;
 		
 		System.out.println("Gen " + gen);
-	}
-	
-	private double random() {
-		return (this.rand.nextDouble()*2.0)-1.0;
 	}
 	
 	//inputs are x to pipe, y to pipe, pipe vel, bird vel
