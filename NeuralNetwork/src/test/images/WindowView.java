@@ -1,6 +1,7 @@
 package test.images;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -27,22 +28,24 @@ public class WindowView {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public WindowView() {
+	public WindowView() throws IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	private void initialize() {
+	private void initialize() throws IOException {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 400, 400);
+		frame.setBounds(100, 100, 600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new DrawViewPanel();
-		panel.setBounds(0, 0, 384, 361);
+		panel.setBounds(0, 0, 582, 553);
 		frame.getContentPane().add(panel);
 	}
 }

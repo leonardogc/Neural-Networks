@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.swing.JPanel;
@@ -20,20 +21,25 @@ import network.NeuralNetwork;
 
 public class DrawViewPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener{
 	private double[][] image;
+	private ArrayList<Image> images;
+	private int currImage;
 	private NeuralNetwork net;
 	
-	public static final int pixelSize = 12;
+	public static final int pixelSize = 19;
 	public static final int pictureSize = 28;
 	
-	public static final int dx = (384 - pictureSize*pixelSize)/2;
-	public static final int dy = (361 - pictureSize*pixelSize)/2;
+	public static final int dx = (582 - pictureSize*pixelSize)/2;
+	public static final int dy = (553 - pictureSize*pixelSize)/2;
 	
-	public DrawViewPanel() {
+	public DrawViewPanel() throws IOException {
 		addKeyListener(this);
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		
 		this.image = new double[pictureSize][pictureSize];
+		this.images = ImageRecognition.loadImages(0, 1000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
+		Collections.shuffle(this.images);
+		this.currImage = 0; 
 		this.net = new NeuralNetwork("imageRecog.txt");
 	}
 	
@@ -53,38 +59,16 @@ public class DrawViewPanel extends JPanel implements MouseListener, MouseMotionL
 		
 		for(int r = 0; r < this.image.length; r++) {
 			for(int c = 0; c < this.image[r].length; c++) {
-				if(this.image[r][c] != 0) {
-					g.fillRect(dx+c*pixelSize, dy+r*pixelSize, pixelSize, pixelSize);
-				}
+				float color = (float)this.image[r][c];
+				g.setColor(new Color(color, color, color));
+				g.fillRect(dx+c*pixelSize, dy+r*pixelSize, pixelSize, pixelSize);
 			}
 		}
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if(e.getX() >= dx + pixelSize * pictureSize  || e.getX() <= dx) {
-			return;
-		}
-
-		if(e.getY() >= dy + pixelSize * pictureSize  || e.getY() <= dy) {
-			return;
-		}
 		
-		int row = (e.getY()-dy)/pixelSize;
-		int col = (e.getX()-dx)/pixelSize;
-		
-		
-		this.image[row][col] = 1;
-		
-		if(row != 0) {
-			this.image[row-1][col] = 1;
-		}
-		
-		if(col != 0) {
-			this.image[row][col-1] = 1;
-		}
-		
-		repaint();
 	}
 
 	@Override
@@ -99,18 +83,26 @@ public class DrawViewPanel extends JPanel implements MouseListener, MouseMotionL
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_E) {
-			ArrayList<Double> in = new ArrayList<>();
+		boolean updateImage = false;
+		
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			this.currImage++;
 			
-			for(int r = 0; r < this.image.length; r++) {
-				for(int c = 0; c < this.image[r].length; c++) {
-					in.add(this.image[r][c]);
-				}
+			updateImage = true;
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+			if(this.currImage > 0) {
+				this.currImage--;
 			}
-
-			ArrayList<Double> out = net.getOutput(in);
-
-
+			
+			updateImage = true;
+		}
+		
+		if(updateImage) {
+			Image image = this.images.get(this.currImage);
+			
+			ArrayList<Double> out = this.net.getOutput(image.image);
+			
 			double max=-1;
 			int max_i=-1;
 
@@ -121,40 +113,25 @@ public class DrawViewPanel extends JPanel implements MouseListener, MouseMotionL
 				}
 			}
 
-			System.out.println("You wrote a " + max_i);
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_R) {
-			for(int r = 0; r < this.image.length; r++) {
-				for(int c = 0; c < this.image[r].length; c++) {
-					this.image[r][c] = 0;
+			System.out.println("Net: " + max_i);
+			
+			for(int i = 0; i < image.value.size(); i++) {
+				if(image.value.get(i) == 1.0) {
+					System.out.println("Real: " + i);
+					break;
+				}
+			}
+			
+			System.out.println("\n\n");
+			
+			for(int r = 0; r < pictureSize; r++) {
+				for(int c = 0; c < pictureSize; c++) {
+					this.image[r][c] = image.image.get(28*r+c);
 				}
 			}
 			
 			repaint();
 		}
-		
-		/*if(e.getKeyCode() == KeyEvent.VK_F) {
-		    FileWriter fw;
-			try {
-				fw = new FileWriter("2.txt", true);
-			    fw.write("2");
-			    
-			    for(int r = 0; r < this.image.length; r++) {
-					for(int c = 0; c < this.image[r].length; c++) {
-						fw.write("," + (this.image[r][c] > 0 ? 255.0 : 0.0));
-					}
-				}
-			    
-			    fw.write("\n");
-			    
-			    fw.close();
-			    System.out.println("Saved!");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} 
-		}*/
 	}
 
 	@Override
