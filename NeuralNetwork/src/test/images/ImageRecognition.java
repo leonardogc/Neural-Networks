@@ -55,7 +55,7 @@ public class ImageRecognition {
 	
 	public static void main(String[] args) throws IOException {
 		//TRAIN
-		ArrayList<Image> images = loadImages(0, 30000, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_train.csv");
+		ArrayList<Image> images = loadImages(0, 30000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_train.csv");
 
 		Collections.shuffle(images);
 
@@ -104,7 +104,7 @@ public class ImageRecognition {
 		
 		//TEST
 
-		/*ArrayList<Image> images = loadImages(0, 200, "C:\\Users\\pc\\Desktop\\NeuralNetwork\\mnist_test.csv");
+		/*ArrayList<Image> images = loadImages(0, 200, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
 
 		NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
 

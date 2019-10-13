@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Window {
+public class WindowView {
 
 	private JFrame frame;
 
@@ -16,7 +16,7 @@ public class Window {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Window window = new Window();
+					WindowView window = new WindowView();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -28,7 +28,7 @@ public class Window {
 	/**
 	 * Create the application.
 	 */
-	public Window() {
+	public WindowView() {
 		initialize();
 	}
 
@@ -41,7 +41,7 @@ public class Window {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JPanel panel = new DrawPanel();
+		JPanel panel = new DrawViewPanel();
 		panel.setBounds(0, 0, 384, 361);
 		frame.getContentPane().add(panel);
 	}

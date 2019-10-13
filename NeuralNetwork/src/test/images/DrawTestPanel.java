@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import network.NeuralNetwork;
 
 
-public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener{
+public class DrawTestPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener{
 	private double[][] image;
 	private NeuralNetwork net;
 	
@@ -28,7 +28,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 	public static final int dx = (384 - pictureSize*pixelSize)/2;
 	public static final int dy = (361 - pictureSize*pixelSize)/2;
 	
-	public DrawPanel() {
+	public DrawTestPanel() {
 		addKeyListener(this);
 		addMouseMotionListener(this);
 		addMouseListener(this);
