@@ -55,14 +55,14 @@ public class ImageRecognition {
 	
 	public static void main(String[] args) throws IOException {
 		//TRAIN
-		ArrayList<Image> images = loadImages(0, 30000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_train.csv");
+		ArrayList<Image> images = loadImages(0, 60000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_train.csv");
 
 		Collections.shuffle(images);
 
 		NeuralNetwork net = new NeuralNetwork(new int[] {28*28, 16, 16, 10});
 		//NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
 		
-		int nTrEx = 100;
+		int nTrEx = 200;
 		int index = 0;
 		
 		int costN = 200;
@@ -104,24 +104,14 @@ public class ImageRecognition {
 		
 		//TEST
 
-		/*ArrayList<Image> images = loadImages(0, 200, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
+		/*ArrayList<Image> images = loadImages(0, 10000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
 
 		NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
 
-		for(int n = 0; n < 20; n++) {
-
-			for(int r = 0; r < 28; r++) {
-				for(int c = 0; c < 28; c++) {
-					if(images.get(n).image.get(28*r+c) == 0) {
-						System.out.print("  ");
-					}
-					else {
-						System.out.print("o ");
-					}
-				}
-				System.out.println();
-			}
-
+		double total = 0;
+		double right = 0;
+		
+		for(int n = 0; n < 10000; n++) {
 
 			ArrayList<Double> out = net.getOutput(images.get(n).image);
 			
@@ -136,16 +126,22 @@ public class ImageRecognition {
 				}
 			}
 			
-			System.out.println("Net: " + max_i);
+			int real = -1;
 			
 			for(int i2 = 0; i2 < images.get(n).value.size(); i2++) {
 				if(images.get(n).value.get(i2) == 1.0) {
-					System.out.println("Real: " + i2);
+					real = i2;
 					break;
 				}
 			}
-		}*/
+			
+			if(max_i == real) {
+				right++;
+			}
+			
+			total++;
+		}
 
-
+		System.out.println("Accuracy: " + right*100/total + "%");*/
 	}
 }
