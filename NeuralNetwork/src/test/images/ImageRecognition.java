@@ -54,6 +54,11 @@ public class ImageRecognition {
 	}
 	
 	public static void main(String[] args) throws IOException {
+		train();
+		test();
+	}
+
+	public static void train() throws IOException {
 		//TRAIN
 		ArrayList<Image> images = loadImages(0, 60000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_train.csv");
 
@@ -61,30 +66,30 @@ public class ImageRecognition {
 
 		NeuralNetwork net = new NeuralNetwork(new int[] {28*28, 16, 16, 10});
 		//NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
-		
+
 		int nTrEx = 200;
 		int index = 0;
-		
+
 		int costN = 200;
 
 		for(int it = 0; it < 2000; it++) {
 			//calculate cost
-			
+
 			double averageCost = 0;
-			
+
 			for(int i = 0; i < costN && i < images.size(); i++) {
 				ArrayList<Double> out = net.getOutput(images.get(i).image);
-				
+
 				for(int s = 0; s < out.size(); s++) {
 					averageCost+=NetworkUtils.cost(out.get(s), images.get(i).value.get(s));
 				}
 			}
-			
+
 			averageCost/=costN;
-			
+
 			System.out.println("Cost: " + averageCost + " It: " + it);
 			////
-			
+
 			net.resetGradients();
 
 			for(int i = 0; i < nTrEx && index < images.size(); i++, index++) {
@@ -92,56 +97,57 @@ public class ImageRecognition {
 			}
 
 			net.updateWeightsAndBias(4.0);
-			
+
 			if(index >= images.size()) {
 				index = 0;
 				Collections.shuffle(images);
 			}
 		}
-		
+
 		net.toFile("imageRecog.txt");
-		
-		
+	}
+
+	public static void test() throws IOException {
 		//TEST
 
-		/*ArrayList<Image> images = loadImages(0, 10000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
+		ArrayList<Image> images = loadImages(0, 10000, "C:\\Users\\Leonardo Capozzi\\Documents\\GitHub\\Neural-Networks\\NeuralNetwork\\src\\test\\data\\mnist_test.csv");
 
 		NeuralNetwork net = new NeuralNetwork("imageRecog.txt");
 
 		double total = 0;
 		double right = 0;
-		
+
 		for(int n = 0; n < 10000; n++) {
 
 			ArrayList<Double> out = net.getOutput(images.get(n).image);
-			
-			
+
+
 			double max=-1;
 			int max_i=-1;
-			
+
 			for(int i = 0; i < out.size(); i++) {
 				if(out.get(i) > max) {
 					max = out.get(i);
 					max_i = i;
 				}
 			}
-			
+
 			int real = -1;
-			
+
 			for(int i2 = 0; i2 < images.get(n).value.size(); i2++) {
 				if(images.get(n).value.get(i2) == 1.0) {
 					real = i2;
 					break;
 				}
 			}
-			
+
 			if(max_i == real) {
 				right++;
 			}
-			
+
 			total++;
 		}
 
-		System.out.println("Accuracy: " + right*100/total + "%");*/
+		System.out.println("Accuracy: " + right*100/total + "%");
 	}
 }
